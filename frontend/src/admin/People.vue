@@ -36,7 +36,7 @@
         <!-- IMAGE -->
         <img
           :src="p.image 
-            ? `http://localhost:8000/uploads/${p.image}` 
+            ? `http://localhost:30001/uploads/${p.image}` 
             : 'https://via.placeholder.com/100'"
           class="avatar"
         />
@@ -76,7 +76,7 @@ const handleImage = (e) => {
 // LOAD PEOPLE
 const loadPeople = async () => {
   try {
-    const res = await fetch("http://localhost:8000/api/people")
+    const res = await fetch("https://kinlp-backend.railway.app/api/people")
 
     if (!res.ok) {
       throw new Error("Failed to load people")
@@ -99,7 +99,7 @@ const addPerson = async () => {
     formData.append("role", role.value)
     formData.append("image", image.value)
 
-    await fetch("http://localhost:8000/api/people", {
+    await fetch("http://localhost:3001/api/people", {
       method: "POST",
       body: formData
     })
@@ -119,7 +119,7 @@ const addPerson = async () => {
 // DELETE
 const deletePerson = async (id) => {
   try {
-    await fetch(`http://localhost:8000/api/people/${id}`, {
+    await fetch(`http://localhost:3001/api/people/${id}`, {
       method: "DELETE"
     })
 

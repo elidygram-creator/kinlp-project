@@ -56,7 +56,7 @@ const messages = ref([])
 // FETCH MESSAGES FROM BACKEND
 const loadMessages = async () => {
   try {
-    const res = await fetch("http://localhost:8000/api/messages")
+    const res = await fetch("https://kinlp-backend.railway.app/api/messages")
     const data = await res.json()
     messages.value = data
   } catch (err) {

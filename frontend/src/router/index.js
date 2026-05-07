@@ -1,81 +1,60 @@
-import { createRouter, createWebHistory } from "vue-router"
+import { createRouter, createWebHashHistory } from "vue-router"
 
-// ==========================
-// PUBLIC PAGES
-// ==========================
+// PUBLIC
 import HomePage from "../pages/HomePage.vue"
 import PeoplePage from "../pages/PeoplePage.vue"
 import PublicationPage from "../pages/PublicationPage.vue"
 import ProductPage from "../pages/ProductPage.vue"
 
-// ==========================
-// ADMIN PAGES
-// ==========================
+// ADMIN
 import Login from "../admin/Login.vue"
 import Dashboard from "../admin/Dashboard.vue"
-import AdminPeople from "../admin/People.vue"
+import People from "../admin/People.vue"
 
-// ==========================
-// ROUTES
-// ==========================
 const routes = [
 
-  // 🏠 HOME
+  // HOME
   {
     path: "/",
-    name: "home",
     component: HomePage
   },
 
-  // 👥 PUBLIC PEOPLE PAGE
+  // PUBLIC PAGES
   {
     path: "/people",
-    name: "people",
     component: PeoplePage
   },
-
-  // 📚 PUBLICATIONS
   {
     path: "/publications",
-    name: "publications",
     component: PublicationPage
   },
-
-  // 🛒 PRODUCTS
   {
     path: "/products",
-    name: "products",
     component: ProductPage
   },
 
-  // 🔐 LOGIN
+  // LOGIN
   {
     path: "/login",
-    name: "login",
     component: Login
   },
 
-  // 🛠 ADMIN DASHBOARD
+  // ADMIN DASHBOARD
   {
     path: "/admin",
-    name: "admin",
     component: Dashboard
   },
 
-  // 👨‍💼 ADMIN PEOPLE (IMPORTANT)
+  // ADMIN PEOPLE
   {
     path: "/admin/people",
-    name: "admin-people",
-    component: AdminPeople
+    component: People
   }
 
 ]
 
-// ==========================
-// ROUTER CONFIG
-// ==========================
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes
 })
 

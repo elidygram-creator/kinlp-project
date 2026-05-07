@@ -12,7 +12,7 @@ const getPeople = async () => {
     error.value = null
 
     // FIXED: correct backend port
-    const res = await fetch("http://localhost:8000/api/people")
+    const res = await fetch("https://kinlp-backend.railway.app/api/people")
 
     if (!res.ok) {
       throw new Error("Failed to load people")
@@ -78,7 +78,7 @@ onMounted(() => {
         <img 
           class="person-img"
           :src="p.image 
-            ? `http://localhost:8000/uploads/${p.image}` 
+            ? `http://localhost:5000/uploads/${p.image}` 
             : 'https://via.placeholder.com/200'"
         />
 

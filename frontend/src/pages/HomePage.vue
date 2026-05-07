@@ -16,7 +16,7 @@ const form = ref({
 // ✅ FIXED: SEND TO BACKEND
 const sendMessage = async () => {
   try {
-    const res = await fetch("http://localhost:8000/api/messages", {
+    const res = await fetch("https://kinlp-backend.railway.app/api/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -50,7 +50,7 @@ const sendMessage = async () => {
 // 🔥 GET PARTNERS
 const getPartners = async () => {
   try {
-    const res = await fetch("http://localhost:8000/api/partners")
+    const res = await fetch("https://kinlp-backend.railway.app/api/partners")
     const data = await res.json()
     partners.value = Array.isArray(data) ? data : []
   } catch (err) {
@@ -104,7 +104,7 @@ onMounted(() => {
           v-for="p in partners"
           :key="p.id"
           :src="p.image 
-            ? `http://localhost:8000/uploads/${p.image}` 
+            ? `http://localhost:5000/uploads/${p.image}` 
             : 'https://via.placeholder.com/200'"
           class="partners-img"
         />

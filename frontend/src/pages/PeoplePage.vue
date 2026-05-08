@@ -6,13 +6,13 @@ const people = ref([])
 const loading = ref(false)
 const error = ref(null)
 
+// ================= LOAD PEOPLE =================
 const getPeople = async () => {
   try {
     loading.value = true
     error.value = null
 
-    // FIXED: correct backend port
-    const res = await fetch("https://kinlp-backend.railway.app/api/people")
+    const res = await fetch("http://localhost:9000/api/people")
 
     if (!res.ok) {
       throw new Error("Failed to load people")
@@ -37,12 +37,8 @@ onMounted(() => {
 <template>
   <div class="site-wrapper">
 
-    <!-- HEADER -->
     <header class="header">
-      
-      <!-- FULL BACKGROUND IMAGE FIXED -->
       <img :src="headerImg" class="header-bg" />
-
       <div class="overlay"></div>
 
       <nav class="nav">
@@ -53,32 +49,27 @@ onMounted(() => {
       </nav>
     </header>
 
-    <!-- BODY -->
     <section class="people-body">
       <h1>Our Team</h1>
 
-      <!-- LOADING -->
       <div v-if="loading">
         <p>Loading people...</p>
       </div>
 
-      <!-- ERROR -->
       <div v-if="error">
         <p style="color:red">{{ error }}</p>
       </div>
 
-      <!-- EMPTY -->
       <div v-if="!loading && people.length === 0">
         <p>No people found</p>
       </div>
 
-      <!-- PEOPLE LIST -->
       <div v-for="p in people" :key="p.id" class="person">
 
         <img 
           class="person-img"
           :src="p.image 
-            ? `http://localhost:5000/uploads/${p.image}` 
+            ? `http://localhost:9000/uploads/${p.image}` 
             : 'https://via.placeholder.com/200'"
         />
 
@@ -100,14 +91,10 @@ onMounted(() => {
       </div>
     </section>
 
-    <!-- FOOTER -->
     <footer class="footer">
 
       <h4>
-        <a 
-          href="/" 
-          style="color:white; text-decoration:none;"
-        >
+        <a href="/" style="color:white; text-decoration:none;">
           KINLP R&D Ltd
         </a>
       </h4>
@@ -125,20 +112,14 @@ onMounted(() => {
 
       <p>
         📧
-        <a
-          href="mailto:info@kinlp.com"
-          style="color:white; text-decoration:none;"
-        >
+        <a href="mailto:info@kinlp.com" style="color:white; text-decoration:none;">
           info@kinlp.com
         </a>
 
         |
 
         📞
-        <a
-          href="tel:+250788676902"
-          style="color:white; text-decoration:none;"
-        >
+        <a href="tel:+250788676902" style="color:white; text-decoration:none;">
           (+250)788-676-902
         </a>
       </p>
@@ -171,16 +152,6 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   background: rgba(0,0,0,0.3);
-}
-
-.site-link {
-  position: absolute;
-  top: 10px;
-  left: 20px;
-  color: white;
-  font-weight: bold;
-  text-decoration: underline;
-  z-index: 2;
 }
 
 .nav {

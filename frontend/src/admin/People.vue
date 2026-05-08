@@ -21,7 +21,6 @@
       <input v-model="email" placeholder="Email" />
       <input v-model="role" placeholder="Role" />
 
-      <!-- IMAGE INPUT -->
       <input type="file" @change="handleImage" />
 
       <button @click="addPerson">Add Person</button>
@@ -36,17 +35,16 @@
         <!-- IMAGE -->
         <img
           :src="p.image 
-            ? `http://localhost:30001/uploads/${p.image}` 
+            ? `http://localhost:9000/uploads/${p.image}` 
             : 'https://via.placeholder.com/100'"
           class="avatar"
         />
 
         <!-- INFO -->
         <h2>{{ p.name }}</h2>
-
         <p>{{ p.email }}</p>
 
-        <!-- BIG ROLE -->
+        <!-- ROLE -->
         <p class="role">{{ p.role }}</p>
 
         <button @click="deletePerson(p.id)">Delete</button>
@@ -68,41 +66,44 @@ const email = ref("")
 const role = ref("")
 const image = ref(null)
 
-// HANDLE IMAGE
+// ================= IMAGE =================
 const handleImage = (e) => {
   image.value = e.target.files[0]
 }
 
-// LOAD PEOPLE
+// ================= LOAD PEOPLE =================
 const loadPeople = async () => {
   try {
-    const res = await fetch("https://kinlp-backend.railway.app/api/people")
+    const res = await fetch("http://localhost:9000/api/people")
 
-    if (!res.ok) {
-      throw new Error("Failed to load people")
-    }
+    if (!res.ok) throw new Error("Failed to load people")
 
     people.value = await res.json()
 
   } catch (err) {
-    console.log("LOAD ERROR:", err)
+    console.error("LOAD ERROR:", err)
     people.value = []
   }
 }
 
-// ADD PERSON
+// ================= ADD PERSON =================
 const addPerson = async () => {
   try {
     const formData = new FormData()
     formData.append("name", name.value)
     formData.append("email", email.value)
     formData.append("role", role.value)
-    formData.append("image", image.value)
 
-    await fetch("http://localhost:3001/api/people", {
+    if (image.value) {
+      formData.append("image", image.value)
+    }
+
+    const res = await fetch("http://localhost:9000/api/people", {
       method: "POST",
       body: formData
     })
+
+    if (!res.ok) throw new Error("Failed to add person")
 
     name.value = ""
     email.value = ""
@@ -112,21 +113,23 @@ const addPerson = async () => {
     loadPeople()
 
   } catch (err) {
-    console.log("ADD ERROR:", err)
+    console.error("ADD ERROR:", err)
   }
 }
 
-// DELETE
+// ================= DELETE PERSON =================
 const deletePerson = async (id) => {
   try {
-    await fetch(`http://localhost:3001/api/people/${id}`, {
+    const res = await fetch(`http://localhost:9000/api/people/${id}`, {
       method: "DELETE"
     })
+
+    if (!res.ok) throw new Error("Delete failed")
 
     loadPeople()
 
   } catch (err) {
-    console.log("DELETE ERROR:", err)
+    console.error("DELETE ERROR:", err)
   }
 }
 
@@ -193,7 +196,7 @@ onMounted(loadPeople)
   margin-bottom: 10px;
 }
 
-/* BIG ROLE */
+/* ROLE */
 .role {
   font-size: 18px;
   font-weight: bold;

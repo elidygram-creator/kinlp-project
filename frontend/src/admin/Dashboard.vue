@@ -6,14 +6,12 @@
 
     <!-- ================= PEOPLE CARD ================= -->
     <div class="cards">
-
       <router-link to="/admin/people" class="card-link">
         <div class="card">
           <h3>👥 People</h3>
           <p>Add / Delete / Manage people</p>
         </div>
       </router-link>
-
     </div>
 
     <!-- ================= MESSAGES ================= -->
@@ -21,7 +19,11 @@
 
       <h2>📩 User Messages</h2>
 
-      <div v-if="messages.length === 0" class="empty">
+      <div v-if="loading" class="empty">
+        Loading messages...
+      </div>
+
+      <div v-else-if="messages.length === 0" class="empty">
         No messages yet.
       </div>
 
@@ -36,7 +38,7 @@
 
           <p class="msg-text">{{ m.message }}</p>
 
-          <small class="date">{{ m.created_at }}</small>
+          <small class="date">{{ formatDate(m.created_at) }}</small>
 
         </div>
 
@@ -50,20 +52,41 @@
 <script setup>
 import { ref, onMounted } from "vue"
 
-// ================= MESSAGES DATA =================
+// ================= STATE =================
 const messages = ref([])
+const loading = ref(false)
 
-// FETCH MESSAGES FROM BACKEND
+// ================= FETCH MESSAGES =================
 const loadMessages = async () => {
   try {
-    const res = await fetch("https://kinlp-backend.railway.app/api/messages")
+    loading.value = true
+
+    const res = await fetch(
+      "http://localhost:9000/api/messages"
+    )
+
+    if (!res.ok) {
+      throw new Error("Failed to load messages")
+    }
+
     const data = await res.json()
     messages.value = data
+
   } catch (err) {
-    console.log("ERROR:", err)
+    console.error("FETCH ERROR:", err)
+    messages.value = []
+  } finally {
+    loading.value = false
   }
 }
 
+// ================= FORMAT DATE =================
+const formatDate = (date) => {
+  if (!date) return ""
+  return new Date(date).toLocaleString()
+}
+
+// ================= ON LOAD =================
 onMounted(() => {
   loadMessages()
 })
@@ -73,16 +96,14 @@ onMounted(() => {
 .dashboard {
   padding: 20px;
   font-family: Arial;
-  background: #f5f6f8;
+  background: #b57eec;
   min-height: 100vh;
 }
 
-/* TITLE */
 .title {
   margin-bottom: 20px;
 }
 
-/* ================= PEOPLE CARD ================= */
 .cards {
   display: flex;
   gap: 20px;
@@ -107,7 +128,6 @@ onMounted(() => {
   transform: translateY(-3px);
 }
 
-/* ================= MESSAGES ================= */
 .messages-section {
   margin-top: 40px;
 }
@@ -116,7 +136,6 @@ onMounted(() => {
   margin-bottom: 10px;
 }
 
-/* SCROLL BOX */
 .messages-box {
   max-height: 350px;
   overflow-y: auto;
@@ -125,7 +144,6 @@ onMounted(() => {
   border-radius: 10px;
 }
 
-/* MESSAGE CARD */
 .msg-card {
   background: white;
   padding: 12px;
@@ -134,7 +152,6 @@ onMounted(() => {
   border-left: 4px solid #0d6efd;
 }
 
-/* HEADER */
 .msg-header {
   display: flex;
   justify-content: space-between;
@@ -142,18 +159,15 @@ onMounted(() => {
   margin-bottom: 5px;
 }
 
-/* TEXT */
 .msg-text {
   margin: 8px 0;
 }
 
-/* DATE */
 .date {
   font-size: 12px;
   color: gray;
 }
 
-/* EMPTY */
 .empty {
   color: gray;
 }

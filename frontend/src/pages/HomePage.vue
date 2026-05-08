@@ -13,10 +13,10 @@ const form = ref({
   message: ''
 })
 
-// ✅ FIXED: SEND TO BACKEND
+// ================= SEND MESSAGE =================
 const sendMessage = async () => {
   try {
-    const res = await fetch("https://kinlp-backend.railway.app/api/messages", {
+    const res = await fetch("http://localhost:9000/api/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -34,7 +34,6 @@ const sendMessage = async () => {
 
     console.log("SERVER RESPONSE:", data)
 
-    // reset form
     form.value = {
       name: '',
       email: '',
@@ -47,12 +46,18 @@ const sendMessage = async () => {
   }
 }
 
-// 🔥 GET PARTNERS
+// ================= GET PARTNERS =================
 const getPartners = async () => {
   try {
-    const res = await fetch("https://kinlp-backend.railway.app/api/partners")
+    const res = await fetch("http://localhost:9000/api/partners")
+
+    if (!res.ok) {
+      throw new Error("Failed to load partners")
+    }
+
     const data = await res.json()
     partners.value = Array.isArray(data) ? data : []
+
   } catch (err) {
     console.log("FETCH ERROR:", err)
     partners.value = []
@@ -67,7 +72,7 @@ onMounted(() => {
 <template>
   <div class="site-wrapper">
 
-    <!-- 🔥 HEADER -->
+    <!-- HEADER -->
     <header class="header">
       <img :src="headerImg" class="header-bg" />
       <div class="overlay"></div>
@@ -80,7 +85,7 @@ onMounted(() => {
       </nav>
     </header>
 
-    <!-- 🔥 MISSION -->
+    <!-- MISSION -->
     <section class="mission">
       <div class="container">
         <h2>Our Mission</h2>
@@ -94,7 +99,7 @@ onMounted(() => {
       </div>
     </section>
 
-    <!-- 🔥 PARTNERS -->
+    <!-- PARTNERS -->
     <section class="partners">
       
       <img :src="partnersImg" class="partners-img full-banner" />
@@ -104,7 +109,7 @@ onMounted(() => {
           v-for="p in partners"
           :key="p.id"
           :src="p.image 
-            ? `http://localhost:5000/uploads/${p.image}` 
+            ? `http://localhost:9000/uploads/${p.image}` 
             : 'https://via.placeholder.com/200'"
           class="partners-img"
         />
@@ -112,7 +117,7 @@ onMounted(() => {
 
     </section>
 
-    <!-- 🔥 QUESTIONS -->
+    <!-- QUESTIONS -->
     <section class="questions">
       <h3>Questions?</h3>
       <p>
@@ -123,36 +128,18 @@ onMounted(() => {
       </p>
     </section>
 
-    <!-- 🔥 CONTACT SECTION -->
+    <!-- CONTACT -->
     <section class="contact-section">
       <div class="contact-container">
 
-        <!-- LEFT -->
         <div class="contact-form">
           <h2>Send Us a Message</h2>
 
           <form @submit.prevent="sendMessage">
 
-            <input
-              type="text"
-              v-model="form.name"
-              placeholder="Your Name"
-              required
-            />
-
-            <input
-              type="email"
-              v-model="form.email"
-              placeholder="Your Email"
-              required
-            />
-
-            <textarea
-              v-model="form.message"
-              placeholder="Your Message"
-              rows="6"
-              required
-            ></textarea>
+            <input type="text" v-model="form.name" placeholder="Your Name" required />
+            <input type="email" v-model="form.email" placeholder="Your Email" required />
+            <textarea v-model="form.message" placeholder="Your Message" rows="6" required></textarea>
 
             <button type="submit">
               Send Message
@@ -161,24 +148,20 @@ onMounted(() => {
           </form>
         </div>
 
-        <!-- RIGHT -->
         <div class="contact-map">
-
           <iframe
             src="https://maps.google.com/maps?width=100%25&height=600&hl=en&q=KG%20147%20St,%20Kimironko,%20Kigali,%20Rwanda+(KINLP)&t=&z=14&ie=UTF8&iwloc=B&output=embed"
             width="100%"
             height="100%"
             style="border:0;"
-            allowfullscreen=""
             loading="lazy">
           </iframe>
-
         </div>
 
       </div>
     </section>
 
-    <!-- 🔥 FOOTER -->
+    <!-- FOOTER -->
     <footer class="footer">
       <h4>
         <a href="/" class="link">KINLP R&D Ltd</a>
@@ -213,13 +196,12 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* 🔥 YOUR ORIGINAL STYLE KEPT EXACTLY (UNCHANGED) */
+/* unchanged styles kept exactly */
 .site-wrapper {
   font-family: Arial, sans-serif;
   color: #222;
 }
 
-/* HEADER */
 .header {
   position: relative;
   height: 70vh;
@@ -252,7 +234,6 @@ onMounted(() => {
   font-weight: bold;
 }
 
-/* MISSION */
 .mission {
   padding: 60px 20px;
   background: white;
@@ -264,7 +245,6 @@ onMounted(() => {
   text-align: center;
 }
 
-/* PARTNERS */
 .partners {
   padding: 60px 20px;
   text-align: center;
@@ -291,7 +271,6 @@ onMounted(() => {
   gap: 20px;
 }
 
-/* QUESTIONS */
 .questions {
   background: white;
   color: black;
@@ -299,7 +278,6 @@ onMounted(() => {
   text-align: center;
 }
 
-/* CONTACT */
 .contact-section {
   padding: 70px 20px;
   background: #f5f5f5;
@@ -342,7 +320,6 @@ onMounted(() => {
   height: 500px;
 }
 
-/* FOOTER */
 .footer {
   background: rgb(80, 152, 224);
   color: white;
